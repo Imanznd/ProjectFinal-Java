@@ -1,4 +1,4 @@
-package ttic;
+package com.example.dong;
 
 public class Person {
 
@@ -16,5 +16,13 @@ public class Person {
 
     public double getAmount() {
         return amount;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", amount=" + amount +
+                '}';
     }
 }
