@@ -1,5 +1,8 @@
 package com.example.dong;
 
+/**
+ * POJO for transaction
+ */
 public class Transaction{
 
     double amount;
