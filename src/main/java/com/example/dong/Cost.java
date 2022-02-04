@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Cost {
-    private ArrayList<Person> sahim = new ArrayList<>();
-    private ArrayList<Person> payers = new ArrayList<>();
-    public ArrayList<Person> people = new ArrayList<>();
+
+    private final ArrayList<Person> sahim = new ArrayList<>();
+    private final ArrayList<Person> payers = new ArrayList<>();
+    private final ArrayList<Person> people = new ArrayList<>();
 
     public void addJustPayer(Person p) {
         if (p.getAmount() > 0) {
@@ -28,29 +29,29 @@ public class Cost {
     public ArrayList<Transaction> finalCalculate() {
 
         double total = 0;
-        for (int i = 0; i < payers.size(); i++) {
-            total += payers.get(i).getAmount();
+        for (Person payer : payers) {
+            total += payer.getAmount();
         }
 
         double sahmeHarNafar = total / sahim.size();
 
         ArrayList<Person> sahm = new ArrayList<>();
-        for (int i = 0; i < people.size(); i++) {
-            if (sahim.contains(people.get(i))) {
-                sahm.add(new Person(people.get(i).getName(), (sahmeHarNafar - people.get(i).getAmount())));
+        for (Person person : people) {
+            if (sahim.contains(person)) {
+                sahm.add(new Person(person.getName(), (sahmeHarNafar - person.getAmount())));
             } else {
-                sahm.add(new Person(people.get(i).getName(), -1 * people.get(i).getAmount()));
+                sahm.add(new Person(person.getName(), -1 * person.getAmount()));
             }
         }
         ArrayList<Person> dahande = new ArrayList<>();
         ArrayList<Person> girande = new ArrayList<>();
 
-        for (int i = 0; i < sahm.size(); i++) {
+        for (Person person : sahm) {
 
-            if (sahm.get(i).getAmount() > 0) {
-                dahande.add(sahm.get(i));
+            if (person.getAmount() > 0) {
+                dahande.add(person);
             } else {
-                girande.add(sahm.get(i));
+                girande.add(person);
             }
         }
         girande.sort(new Comparator<Person>() {
@@ -65,16 +66,17 @@ public class Cost {
                 return (int) (o2.getAmount() - o1.getAmount());
             }
         });
-        ArrayList<Transaction> finalTransacions = new ArrayList<>();
+
+        ArrayList<Transaction> finalTransactions = new ArrayList<>();
         for (int i = 0; i < girande.size(); i++) {
             for (int j = 0; j < dahande.size(); j++) {
                 double ekhtelaf = dahande.get(j).getAmount() + girande.get(i).getAmount();
                 if (ekhtelaf <= 0) {
-                    finalTransacions.add(new Transaction(dahande.get(j).getAmount(), dahande.get(j), girande.get(i)));
+                    finalTransactions.add(new Transaction(dahande.get(j).getAmount(), dahande.get(j), girande.get(i)));
                     girande.set(i, new Person(girande.get(i).getName(), girande.get(i).getAmount() + dahande.get(j).getAmount()));
                     dahande.set(j, new Person(dahande.get(j).getName(), 0));
                 } else {
-                    finalTransacions.add(new Transaction(dahande.get(j).getAmount() - ekhtelaf, dahande.get(j), girande.get(i)));
+                    finalTransactions.add(new Transaction(dahande.get(j).getAmount() - ekhtelaf, dahande.get(j), girande.get(i)));
                     dahande.set(j, new Person(dahande.get(j).getName(), ekhtelaf));
                     girande.set(i, new Person(girande.get(i).getName(), 0));
                 }
@@ -82,15 +84,20 @@ public class Cost {
             }
         }
         ArrayList<Transaction> finalTransaction1 = new ArrayList<>();
-        for (int i = 0; i < finalTransacions.size(); i++) {
-            if (!(finalTransacions.get(i).amount == 0)) {
-                finalTransaction1.add(finalTransacions.get(i));
+        for (Transaction finalTransaction : finalTransactions) {
+            if (!(finalTransaction.amount == 0)) {
+                finalTransaction1.add(finalTransaction);
             }
         }
-        for (int i = 0; i < finalTransaction1.size(); i++) {
-            System.out.println(finalTransaction1.get(i));
-
+        for (Transaction transaction : finalTransaction1) {
+            System.out.println(transaction);
         }
         return finalTransaction1;
+    }
+
+    public void clear() {
+        sahim.clear();
+        payers.clear();
+        people.clear();
     }
 }
